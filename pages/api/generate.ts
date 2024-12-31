@@ -69,7 +69,9 @@ export default async function handler(
   });
 
   let jsonStartResponse = await startResponse.json();
-  let endpointUrl = jsonStartResponse.urls.get;
+  console.log('API Response:', jsonStartResponse);
+
+  let endpointUrl = jsonStartResponse.urls?.get || jsonStartResponse.output?.[0];
 
   // GET request to get the status of the image restoration process & return the result when it's ready
   let restoredImage: string | null = null;

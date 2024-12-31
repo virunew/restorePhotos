@@ -2,7 +2,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start",
     "vercel-build": "prisma generate && next build",
@@ -19,7 +19,7 @@
     "next": "latest",
     "next-auth": "^4.20.1",
     "next-plausible": "^3.11.3",
-    "nsfw-filter": "^1.0.2",
+    "nsfw-filter": "^1.0.4",
     "nsfwjs": "^2.4.2",
     "react": "18.2.0",
     "react-compare-slider": "^2.2.0",

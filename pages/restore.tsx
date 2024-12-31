@@ -15,7 +15,7 @@ import LoadingDots from '../components/LoadingDots';
 import Toggle from '../components/Toggle';
 import appendNewToName from '../utils/appendNewToName';
 import downloadPhoto from '../utils/downloadPhoto';
-import NSFWFilter from 'nsfw-filter';
+import * as nsfwjs from 'nsfwjs';
 import { useSession, signIn } from 'next-auth/react';
 import useSWR from 'swr';
 import { Rings } from 'react-loader-spinner';
@@ -44,20 +44,35 @@ const Home: NextPage = () => {
     onPreUpload: async (
       file: File
     ): Promise<UploadWidgetOnPreUploadResult | undefined> => {
-      let isSafe = false;
       try {
-        isSafe = await NSFWFilter.isSafe(file);
-        console.log({ isSafe });
+        const model = await nsfwjs.load(
+          'https://tfhub.dev/google/tfjs-model/nsfwjs/1/default/1'
+        );
+        
+        const img = new (Image as any as { new(): HTMLImageElement })();
+        img.crossOrigin = 'anonymous';
+        img.src = URL.createObjectURL(file);
+        
+        await new Promise((resolve) => {
+          img.onload = resolve;
+        });
+        
+        const predictions = await model.classify(img);
+        const nsfwPrediction = predictions.find(p => 
+          ['Porn', 'Hentai', 'Sexy'].includes(p.className) && p.probability > 0.5
+        );
+        
+        if (nsfwPrediction) {
+          return { errorMessage: 'Detected a NSFW image which is not allowed.' };
+        }
+        if (data.remainingGenerations === 0) {
+          return { errorMessage: 'No more generations left for the day.' };
+        }
+        return undefined;
       } catch (error) {
         console.error('NSFW predictor threw an error', error);
+        return undefined;
       }
-      if (!isSafe) {
-        return { errorMessage: 'Detected a NSFW image which is not allowed.' };
-      }
-      if (data.remainingGenerations === 0) {
-        return { errorMessage: 'No more generations left for the day.' };
-      }
-      return undefined;
     },
   };
 
