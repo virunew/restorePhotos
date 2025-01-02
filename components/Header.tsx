@@ -16,30 +16,38 @@ export default function Header({ photo }: { photo?: string | undefined }) {
           restorePhotos.io
         </h1>
       </Link>
-      {photo ? (
-        <Image
-          alt='Profile picture'
-          src={photo}
-          className='w-10 rounded-full'
-          width={32}
-          height={28}
-        />
-      ) : (
-        <div className='flex space-x-6'>
-          <Link
-            href='/'
-            className='border-r border-gray-300 pr-4 space-x-2 hover:text-blue-400 transition hidden sm:flex'
-          >
-            <p className='font-medium text-base'>Home</p>
-          </Link>
-          <Link
-            href='/restore'
-            className='border-gray-300 pr-4 space-x-2 hover:text-blue-400 transition hidden sm:flex'
-          >
-            <p className='font-medium text-base'>Restore</p>
-          </Link>
-        </div>
-      )}
+      <div className='flex space-x-4'>
+        <Link 
+          href='/pricing'
+          className='border-r border-gray-300 pr-4 flex space-x-2 hover:text-blue-500 transition'
+        >
+          Pricing
+        </Link>
+        {photo ? (
+          <Image
+            alt='Profile picture'
+            src={photo}
+            className='w-10 rounded-full'
+            width={32}
+            height={28}
+          />
+        ) : (
+          <div className='flex space-x-6'>
+            <Link
+              href='/'
+              className='border-r border-gray-300 pr-4 space-x-2 hover:text-blue-400 transition hidden sm:flex'
+            >
+              <p className='font-medium text-base'>Home</p>
+            </Link>
+            <Link
+              href='/restore'
+              className='border-gray-300 pr-4 space-x-2 hover:text-blue-400 transition hidden sm:flex'
+            >
+              <p className='font-medium text-base'>Restore</p>
+            </Link>
+          </div>
+        )}
+      </div>
     </header>
   );
 }
