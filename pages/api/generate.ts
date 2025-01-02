@@ -2,7 +2,8 @@ import { Ratelimit } from '@upstash/ratelimit';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import redis from '../../utils/redis';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from './auth/[...nextauth]';
+import authOptions from './auth/[...nextauth]';
+import { Session } from 'next-auth';
 
 type Data = string;
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -25,7 +26,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   // Check if user is logged in
-  const session = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions) as Session | null;
   if (!session || !session.user) {
     return res.status(500).json('Login to upload.');
   }
